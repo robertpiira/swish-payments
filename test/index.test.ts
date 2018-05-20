@@ -27,7 +27,24 @@ describe("Swish payment", () => {
     })
 
     expect(response.swishId).toBeDefined()
-    expect(response.paymentRequestToken).toBe(undefined)
+
+    const payment = await swish.getPayment(response.swishId)
+
+    expect(payment.id).toBeDefined()
+    expect(payment.status).toBe("CREATED")
+  })
+
+  it("handles a payment requests without payer cell phone nr", async () => {
+    const response = await swish.paymentRequest({
+      message: "",
+      callbackUrl: "https://example.com/paymentrequests",
+      amount: "100.00",
+      currency: "SEK",
+      payeeAlias: "1231181189"
+    })
+
+    expect(response.swishId).toBeDefined()
+    expect(response.paymentRequestToken).toBeDefined()
 
     const payment = await swish.getPayment(response.swishId)
 
