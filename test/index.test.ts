@@ -17,7 +17,7 @@ describe("Swish payment", () => {
   })
 
   it("handles a payment requests", async () => {
-    const token = await swish.paymentRequest({
+    const response = await swish.paymentRequest({
       message: "",
       callbackUrl: "https://example.com/paymentrequests",
       amount: "100.00",
@@ -26,9 +26,10 @@ describe("Swish payment", () => {
       payerAlias: "46700123456"
     })
 
-    expect(token).toBeDefined()
+    expect(response.swishId).toBeDefined()
+    expect(response.paymentRequestToken).toBe(undefined)
 
-    const payment = await swish.getPayment(token)
+    const payment = await swish.getPayment(response.swishId)
 
     expect(payment.id).toBeDefined()
     expect(payment.status).toBe("CREATED")

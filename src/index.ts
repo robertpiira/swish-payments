@@ -103,7 +103,10 @@ async function handleToken(res: any) {
   if (res.status !== 201) {
     throw await res.json()
   } else {
-    return res.headers.get("location").split("paymentrequests/")[1]
+    return {
+      swishId: res.headers.get("location").split("paymentrequests/")[1],
+      paymentRequestToken: res.headers.paymentrequesttoken
+    }
   }
 }
 
